@@ -16,7 +16,7 @@ It includes **AI-powered companionship, journaling, uplifting media, games, and 
 ### 🔑 Authentication & Onboarding  
 ✅ Sign-up / Sign-in  
 ✅ Profile setup with **theme, mood questions, language**  
-✅ **Multilingual support** (Google Translate API)  
+✅ **Multilingual support**  
 
 ### 🏠 Dashboard  
 🌟 Personalized greeting & motivational **quote carousel**  
@@ -41,7 +41,7 @@ It includes **AI-powered companionship, journaling, uplifting media, games, and 
 ### 🛍️ Shopping / Distraction  
 🛒 Mood-lifting items (Amazon, Meesho API)  
 
-### 🤖 AI Companion – **Bro Bot**  
+### 🤖 AI Companion – **My Genie** 
 💬 **Conversational AI** (Google Gemini / Vertex AI)  
 🎙️ **Voice Input** → AI understanding  
 🔊 **Soothing Voice Output** → Empathetic replies  
@@ -115,7 +115,25 @@ YOUTUBE_API_KEY=your_youtube_key
 
 📸 Screenshots
 
-👉 (Add screenshots of Dashboard, AI Bot, Journal, etc.)
+
+<img width="1919" height="1041" alt="Screenshot 2025-09-11 214917" src="https://github.com/user-attachments/assets/f56903dd-672d-4204-b72c-1f9343b29bd3" />
+
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 214929" src="https://github.com/user-attachments/assets/53676afa-80e9-46af-9b35-6305717b65c1" />
+
+
+<img width="1919" height="1044" alt="Scr<img width="1919" height="1079" alt="Screenshot 2025-09-11 182211" src="https://github.com/user-attachments/assets/a91aae98-5b21-4ad1-8f0d-5023f7886453" />
+
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 182211" src="https://github.com/user-attachments/assets/202fe203-5bb0-49b9-97d6-883c1eb8fe9d" />
+
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 181915" src="https://github.com/user-attachments/assets/9221fc57-2fd7-4ba5-afd2-ab4454e5cead" />
+
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 182007" src="https://github.com/user-attachments/assets/b52cd07e-f737-43ab-8699-976464f68314" />
+
+
 
 🔮 Future Enhancements
 
@@ -132,3 +150,4 @@ Pull requests are welcome! For major changes, open an issue first.
 📜 License
 
 MIT License © 2025 Mind Bloom
+
