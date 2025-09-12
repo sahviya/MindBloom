@@ -16,23 +16,37 @@ It includes **AI-powered companionship, journaling, uplifting media (movies, mus
 ### 🔑 Authentication & Onboarding  
 
 ✅ **About Page (Before Login):**  
-Before signing up or logging in, users will see a **welcome page** introducing *Mind Bloom* and its purpose.  
+<img width="1919" alt="Mind Bloom About Page" src="your-link-here" />
 
-<img width="1919" height="1041" alt="Mind Bloom About Page" src="https://github.com/user-attachments/assets/f56903dd-672d-4204-b72c-1f9343b29bd3" />
+✅ **Sign-up / Sign-in:**  
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 214929" src="https://github.com/user-attachments/assets/53676afa-80e9-46af-9b35-6305717b65c1" />
 
-✅ **Sign-up / Sign-in**  
-✅ Profile setup with **theme, mood questions, language**  
-✅ **Multilingual support**
-  
 
 ### 🏠 Dashboard  
 🌟 Personalized greeting & motivational **quote carousel**  
 🧘 Guided **breathing animation**  
-🎨 Theme + Language selector  
+🎨**Profile Setup (Theme, Language):**  
 
-### 📓 Journal  
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 182211" src="https://github.com/user-attachments/assets/a91aae98-5b21-4ad1-8f0d-5023f7886453" />
+
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 182211" src="https://github.com/user-attachments/assets/202fe203-5bb0-49b9-97d6-883c1eb8fe9d" />
+
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 181915" src="https://github.com/user-attachments/assets/9221fc57-2fd7-4ba5-afd2-ab4454e5cead" />
+
+
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 182007" src="https://github.com/user-attachments/assets/b52cd07e-f737-43ab-8699-976464f68314" />
+
+
+
+  ### 📓 Journal  
 📝 Rich-text editor with **fonts, colors, emojis, stickers**  
 💡 Encouraging prompts  
+<img width="1919" height="1079" alt="Screenshot 2025-09-12 100556" src="https://github.com/user-attachments/assets/4092b73f-2714-4631-9e7c-5b63110a02c0" />
+<img width="1919" height="1079" alt="Screenshot 2025-09-12 100744" src="https://github.com/user-attachments/assets/889ada00-b1f2-4021-956a-d83c74a68066" />
+
 
 ### 🎬 Media Recommendations  
 🎥 **Movies** (YouTube embeds)  
@@ -61,6 +75,15 @@ Before signing up or logging in, users will see a **welcome page** introducing *
 📸 Share posts & images  
 ❤️ Like & support others  
 🤗 Friendly Instagram-like feed  
+🔒 Privacy in Comments
+    To ensure users feel safe while sharing thoughts, all comments are shown as "Anonymous".
+    This protects user identity while still allowing them to participate actively.\
+    
+<img width="1919" height="1079" alt="Screenshot 2025-09-12 100832" src="https://github.com/user-attachments/assets/33b7b0c7-d893-4f49-8fe0-3c60873b6788" />
+<img width="1919" height="1078" alt="Screenshot 2025-09-12 100855" src="https://github.com/user-attachments/assets/b2b0cea8-3f96-4f92-abf8-235b4b3e00ec" />
+<img width="1919" height="1079" alt="Screenshot 2025-09-12 100935" src="https://github.com/user-attachments/assets/332e49aa-e5fb-4905-a01d-ceb10fd2af0c" />
+
+
 
 ### 👤 Profile Customization  
 🎭 Cartoon avatars & stickers  
@@ -129,7 +152,7 @@ YOUTUBE_API_KEY=your_youtube_key
 <img width="1919" height="1079" alt="Screenshot 2025-09-11 214929" src="https://github.com/user-attachments/assets/53676afa-80e9-46af-9b35-6305717b65c1" />
 
 
-<img width="1919" height="1044" alt="Scr<img width="1919" height="1079" alt="Screenshot 2025-09-11 182211" src="https://github.com/user-attachments/assets/a91aae98-5b21-4ad1-8f0d-5023f7886453" />
+<img width="1919" height="1079" alt="Screenshot 2025-09-11 182211" src="https://github.com/user-attachments/assets/a91aae98-5b21-4ad1-8f0d-5023f7886453" />
 
 
 <img width="1919" height="1079" alt="Screenshot 2025-09-11 182211" src="https://github.com/user-attachments/assets/202fe203-5bb0-49b9-97d6-883c1eb8fe9d" />
