@@ -7,16 +7,23 @@
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-blue)  
 
 Mind Bloom is a **full-stack web application** that helps users stay positive, motivated, and connected.  
-It includes **AI-powered companionship, journaling, uplifting media, games, and a supportive community**.  
+It includes **AI-powered companionship, journaling, uplifting media (movies, music, shorts, self help books) , games, and a supportive community**.  
 
 ---
 
 ## ✨ Features  
 
 ### 🔑 Authentication & Onboarding  
-✅ Sign-up / Sign-in  
+
+✅ **About Page (Before Login):**  
+Before signing up or logging in, users will see a **welcome page** introducing *Mind Bloom* and its purpose.  
+
+<img width="1919" height="1041" alt="Mind Bloom About Page" src="https://github.com/user-attachments/assets/f56903dd-672d-4204-b72c-1f9343b29bd3" />
+
+✅ **Sign-up / Sign-in**  
 ✅ Profile setup with **theme, mood questions, language**  
-✅ **Multilingual support**  
+✅ **Multilingual support**
+  
 
 ### 🏠 Dashboard  
 🌟 Personalized greeting & motivational **quote carousel**  
@@ -105,7 +112,7 @@ npm install
 cd ../server
 npm install
 
-#Setup environment variables in .env
+# Setup environment variables in .env
 
 DATABASE_URL=your_database_url
 GCP_PROJECT_ID=your_project_id
@@ -135,7 +142,9 @@ YOUTUBE_API_KEY=your_youtube_key
 
 
 
-🔮 Future Enhancements
+# 🔮 Future Enhancements
+
+Multilingual support
 
 Daily challenges & gratitude journaling
 
