@@ -8,7 +8,7 @@
     "dev:server": "cross-env NODE_ENV=development tsx server/index.ts",
     "dev:client": "vite",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "NODE_ENV=production node dist/index.js",
+    "start": "corss-env NODE_ENV=production node dist/index.js",
     "check": "tsc",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
@@ -88,5 +88,7 @@
     "ts-node": "^10.9.2",
     "vite": "^7.1.4",
     "vite-tsconfig-paths": "^5.1.4"
+    "cross-env": "^7.0.3"
+
   }
 }
