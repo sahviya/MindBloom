@@ -1,0 +1,53 @@
+You are an expert full-stack developer. Create a web application from scratch (front-end and back-end) with the following features:
+
+Full-Stack and AI Requirements: Build the entire application from scratch, including both front-end and back-end. Use any suitable technologies (e.g., React, Angular, Node.js, Python, etc.). Integrate Google Cloud’s AI services (Gemini or Vertex AI) for all AI-related functionality. Ensure the platform is fully multilingual: allow the user to choose any preferred language.
+
+User Authentication and Onboarding: Implement a user registration and login system (sign-up and sign-in pages). After signing in, prompt the user to set up their profile by choosing a UI theme (e.g., light/dark mode or color scheme), answering some personal/mood questions, and selecting their preferred language (the app should support all languages).
+
+Dashboard Layout: The main dashboard should greet the user by name with a welcome message at the top. Display a powerful motivational quote alongside bright, positive images in a carousel that automatically slides or changes. Below the carousel, include a guided breathing exercise animation (inhale/exhale) to help the user relax. In the dashboard header (top bar), show the user’s profile picture on the left, with a theme selector and language dropdown beside it.
+
+Journal Section: Provide a section where the user can write a journal entry. Offer various fonts, colors, and sticker/emoji options so that the journal entry looks attractive and mood-enhancing. Prompt the user with an encouraging question (e.g., “Want to write in your journal?”) and provide a rich-text editor for them to express their thoughts.
+
+Media Recommendations: Include a section for uplifting media:
+
+Movies: Display at least 10 recommended mood-boosting or motivational movie titles (with thumbnails) from YouTube or another video source.
+
+Music: Display at least 10 recommended positive or inspiring songs from Spotify (embedded player or links).
+
+Inspiration Section: Provide motivational video content:
+
+TED Talks: Suggest at least 10 inspiring TED Talk videos.
+
+Success Stories: Suggest at least 10 short video stories of people overcoming struggles.
+
+Self-Help Books Section: List several (e.g., 5–10) free self-help e-books or PDFs with positive/hopeful themes and happy endings. Provide links to download or read them for free.
+
+Shopping/Distraction Section: Provide a shopping-like section to engage the user with positive distractions. Include items like clothing, accessories, shoes, home decor, or comfort foods from e-commerce sources (e.g., Amazon, Meesho). These items serve as uplifting or comforting suggestions (like treating oneself).
+
+AI Companion (“Bro” Bot): Implement a conversational AI assistant that acts like a supportive friend (“bro”). It should listen to the user and offer helpful advice or encouragement.
+
+Use Google Cloud’s AI (Gemini/Vertex AI) for natural language processing (use your API key for authentication).
+
+Enable voice conversation: convert the user’s audio/speech input to text, have the AI process it, and then reply via synthesized speech (text-to-speech) and text.
+
+The AI should always respond empathetically and positively.
+
+Games Section: Recommend at least 10 free, fun, and mood-lifting games (links or embedded) that the user can play. These games should be easy to access and uplifting to improve the user’s mood.
+
+Community Section: Create a peer-support social feed similar to Instagram:
+
+Users can post text and images about what they are going through.
+
+Other users can “like” posts and offer support or advice (comments can be optional or replaced with a way to send encouragement).
+
+Include a camera option and allow users to upload images from their gallery when creating a post.
+
+The interface should feel friendly and encouraging.
+
+Profile Customization: In the user profile page, allow the user to personalize their profile with fun elements:
+
+Suggest cartoon-style avatars, emojis, or stickers for the profile picture.
+
+Allow the user to set personal information and preferences.
+
+Provide any additional profile settings needed (e.g., change password, manage notifications).

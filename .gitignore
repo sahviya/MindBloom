@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# macOS system files
+.DS_Store
+
+# Server public (if generated)
+server/public/
+
+# Vite config backup or temp files
+vite.config.ts.*
+*.tar.gz
+
+# Environment variables
+.env
+# Ignore SQLite databases
+*.db
+prisma/dev.db

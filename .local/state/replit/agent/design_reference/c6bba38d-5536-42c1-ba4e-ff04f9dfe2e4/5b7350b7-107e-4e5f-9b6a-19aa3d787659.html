@@ -1,0 +1,743 @@
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindBloom - Your Magical Wellness Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)"
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                    serif: ["var(--font-serif)"],
+                    mono: ["var(--font-mono)"],
+                }
+            },
+        }
+    };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --background: hsl(240 27% 9%);
+            --foreground: hsl(0 0% 98%);
+            --card: hsl(240 19% 16%);
+            --card-foreground: hsl(0 0% 95%);
+            --popover: hsl(240 19% 16%);
+            --popover-foreground: hsl(0 0% 95%);
+            --primary: hsl(263 70% 60%);
+            --primary-foreground: hsl(0 0% 98%);
+            --secondary: hsl(45 100% 60%);
+            --secondary-foreground: hsl(240 19% 16%);
+            --muted: hsl(240 19% 16%);
+            --muted-foreground: hsl(240 5% 65%);
+            --accent: hsl(217 91% 60%);
+            --accent-foreground: hsl(0 0% 98%);
+            --destructive: hsl(0 62% 30%);
+            --destructive-foreground: hsl(0 85% 97%);
+            --border: hsl(240 19% 27%);
+            --input: hsl(240 19% 16%);
+            --ring: hsl(263 70% 60%);
+            --radius: 12px;
+            --font-sans: "Inter", sans-serif;
+            --font-serif: "Playfair Display", serif;
+            --font-mono: "JetBrains Mono", monospace;
+        }
+
+        .genie-gradient {
+            background: linear-gradient(135deg, hsl(263 70% 60%) 0%, hsl(217 91% 60%) 50%, hsl(45 100% 60%) 100%);
+        }
+
+        .magical-border {
+            border: 2px solid transparent;
+            background: linear-gradient(var(--background), var(--background)) padding-box,
+                       linear-gradient(135deg, hsl(263 70% 60%), hsl(217 91% 60%), hsl(45 100% 60%)) border-box;
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px hsla(263, 70%, 60%, 0.3),
+                       0 0 40px hsla(217, 91%, 60%, 0.2),
+                       0 0 60px hsla(45, 100%, 60%, 0.1);
+        }
+
+        .breathing-circle {
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .magical-shimmer {
+            background: linear-gradient(45deg, transparent 30%, hsla(45, 100%, 60%, 0.1) 50%, transparent 70%);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground font-sans scroll-smooth min-h-screen">
+    <!-- Header -->
+    <!-- @COMPONENT: Header [user profile, navigation, theme selector, language dropdown] -->
+    <header class="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 genie-gradient rounded-full flex items-center justify-center glow-effect">
+                        <i class="fas fa-magic text-primary-foreground text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-serif font-bold text-primary">MindBloom</h1>
+                </div>
+
+                <!-- User Controls -->
+                <div class="flex items-center space-x-4">
+                    <!-- Language Selector -->
+                    <select class="bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring" data-mock="true">
+                        <option>English</option>
+                        <option>Español</option>
+                        <option>Français</option>
+                        <option>العربية</option>
+                    </select>
+
+                    <!-- Theme Selector -->
+                    <button class="p-2 rounded-lg bg-card border border-border hover:bg-accent hover:text-accent-foreground transition-colors">
+                        <i class="fas fa-palette"></i>
+                    </button>
+
+                    <!-- Profile -->
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full genie-gradient flex items-center justify-center">
+                            <i class="fas fa-user text-primary-foreground text-sm"></i>
+                        </div>
+                        <span class="font-medium" data-bind="user.name" data-mock="true">Sarah</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- Main Dashboard -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <!-- @COMPONENT: WelcomeSection [personalized greeting, motivational content] -->
+        <section class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-serif font-bold mb-4 genie-gradient bg-clip-text text-transparent">
+                    Welcome back, <span data-bind="user.name" data-mock="true">Sarah</span>! ✨
+                </h2>
+                <p class="text-muted-foreground text-lg">Your magical wellness journey continues today</p>
+            </div>
+
+            <!-- Motivational Quote Carousel -->
+            <div class="relative mb-8 magical-border rounded-2xl p-8 glow-effect">
+                <!-- A serene mystical landscape with floating particles and magical aura -->
+                <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20"></div>
+                <div class="relative z-10 text-center">
+                    <blockquote class="text-2xl font-serif italic mb-4 text-primary-foreground" data-mock="true">
+                        "The only way to make sense out of change is to plunge into it, move with it, and join the dance."
+                    </blockquote>
+                    <cite class="text-secondary font-medium" data-mock="true">- Alan Watts</cite>
+                </div>
+                <div class="absolute top-4 right-4 text-secondary">
+                    <i class="fas fa-quote-right text-2xl opacity-30"></i>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: WelcomeSection -->
+
+        <!-- Breathing Exercise -->
+        <!-- @COMPONENT: BreathingExercise [guided breathing animation with controls] -->
+        <section class="mb-12">
+            <div class="text-center">
+                <h3 class="text-2xl font-serif font-semibold mb-6 text-primary">✨ Mindful Breathing ✨</h3>
+                <div class="flex justify-center mb-6">
+                    <div class="relative">
+                        <div class="w-32 h-32 rounded-full genie-gradient breathing-circle glow-effect flex items-center justify-center">
+                            <div class="w-20 h-20 rounded-full bg-background/50 flex items-center justify-center">
+                                <i class="fas fa-wind text-2xl text-primary-foreground"></i>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+                            <p class="text-sm text-muted-foreground font-medium" data-mock="true">Breathe In... Hold... Breathe Out...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <button class="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors">
+                        <i class="fas fa-play mr-2"></i>Start Session
+                    </button>
+                    <button class="px-6 py-2 bg-card border border-border hover:bg-accent hover:text-accent-foreground rounded-lg transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Customize
+                    </button>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: BreathingExercise -->
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Journal Section -->
+                <!-- @COMPONENT: JournalSection [rich text editor with formatting options] -->
+                <section class="magical-border rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-serif font-semibold text-primary flex items-center">
+                            <i class="fas fa-feather-alt mr-2"></i>
+                            Your Magical Journal
+                        </h3>
+                        <button class="text-secondary hover:text-secondary/80 transition-colors">
+                            <i class="fas fa-palette"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-muted-foreground mb-3">✨ What magical moments happened today? Share your thoughts...</p>
+                        
+                        <!-- Editor Toolbar -->
+                        <div class="flex items-center space-x-2 mb-3 p-2 bg-muted rounded-lg">
+                            <button class="p-1 hover:bg-background rounded"><i class="fas fa-bold"></i></button>
+                            <button class="p-1 hover:bg-background rounded"><i class="fas fa-italic"></i></button>
+                            <button class="p-1 hover:bg-background rounded"><i class="fas fa-underline"></i></button>
+                            <div class="w-px h-4 bg-border"></div>
+                            <button class="p-1 hover:bg-background rounded"><i class="fas fa-font"></i></button>
+                            <button class="p-1 hover:bg-background rounded"><i class="fas fa-palette"></i></button>
+                            <button class="p-1 hover:bg-background rounded"><i class="fas fa-smile"></i></button>
+                        </div>
+
+                        <!-- Editor -->
+                        <div class="min-h-32 p-4 bg-input border border-border rounded-lg focus-within:ring-2 focus-within:ring-ring" contenteditable="true" data-mock="true">
+                            <p class="text-muted-foreground">Today I felt grateful for the small moments of peace I found...</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <div class="flex space-x-2">
+                            <button class="text-2xl hover:scale-110 transition-transform">🌟</button>
+                            <button class="text-2xl hover:scale-110 transition-transform">✨</button>
+                            <button class="text-2xl hover:scale-110 transition-transform">🌙</button>
+                            <button class="text-2xl hover:scale-110 transition-transform">🦋</button>
+                        </div>
+                        <button class="px-4 py-2 genie-gradient text-primary-foreground rounded-lg hover:opacity-90 transition-opacity">
+                            Save Entry
+                        </button>
+                    </div>
+                </section>
+                <!-- @END_COMPONENT: JournalSection -->
+
+                <!-- Media Recommendations -->
+                <!-- @COMPONENT: MediaSection [movies, music, videos recommendations] -->
+                <section class="magical-border rounded-2xl p-6">
+                    <h3 class="text-xl font-serif font-semibold text-primary mb-6 flex items-center">
+                        <i class="fas fa-star mr-2"></i>
+                        Uplifting Media
+                    </h3>
+
+                    <!-- Tab Navigation -->
+                    <div class="flex space-x-1 mb-6 bg-muted p-1 rounded-lg">
+                        <button class="flex-1 py-2 px-4 rounded-md bg-primary text-primary-foreground transition-colors">Movies</button>
+                        <button class="flex-1 py-2 px-4 rounded-md hover:bg-background transition-colors">Music</button>
+                        <button class="flex-1 py-2 px-4 rounded-md hover:bg-background transition-colors">TED Talks</button>
+                    </div>
+
+                    <!-- Movies Content -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- @MAP: movieRecommendations.map(movie => ( -->
+                        <div class="group cursor-pointer" data-mock="true">
+                            <!-- Movie poster showing an uplifting animated film -->
+                            <div class="aspect-[2/3] bg-gradient-to-br from-accent/20 to-primary/20 rounded-lg mb-2 group-hover:scale-105 transition-transform overflow-hidden">
+                                <img src="https://pixabay.com/get/g4669d73ca611d654da5b373cbce2b4102a86d7fac30a6cfc9d9b900b1d90d329187ba24c32ab925de9ba39c7ec7b3d1351759b8b30cb619ca17ac04f7ab20bc6_1280.png" alt="The Pursuit of Happyness movie poster" class="w-full h-full object-cover" />
+                            </div>
+                            <h4 class="font-medium text-sm">The Pursuit of Happyness</h4>
+                            <p class="text-xs text-muted-foreground">Drama • Inspiration</p>
+                        </div>
+                        <!-- @END_MAP )) -->
+
+                        <div class="group cursor-pointer" data-mock="true">
+                            <!-- Movie poster showing an inspiring biographical film -->
+                            <div class="aspect-[2/3] bg-gradient-to-br from-secondary/20 to-accent/20 rounded-lg mb-2 group-hover:scale-105 transition-transform overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=600" alt="Soul movie poster" class="w-full h-full object-cover" />
+                            </div>
+                            <h4 class="font-medium text-sm">Soul</h4>
+                            <p class="text-xs text-muted-foreground">Animation • Philosophy</p>
+                        </div>
+
+                        <div class="group cursor-pointer" data-mock="true">
+                            <!-- Movie poster showing a heartwarming adventure film -->
+                            <div class="aspect-[2/3] bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg mb-2 group-hover:scale-105 transition-transform overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=600" alt="Inside Out movie poster" class="w-full h-full object-cover" />
+                            </div>
+                            <h4 class="font-medium text-sm">Inside Out</h4>
+                            <p class="text-xs text-muted-foreground">Animation • Emotional</p>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 py-2 text-primary hover:text-primary/80 transition-colors">
+                        <i class="fas fa-chevron-down mr-2"></i>View More
+                    </button>
+                </section>
+                <!-- @END_COMPONENT: MediaSection -->
+
+                <!-- Games Section -->
+                <!-- @COMPONENT: GamesSection [mood-lifting games recommendations] -->
+                <section class="magical-border rounded-2xl p-6">
+                    <h3 class="text-xl font-serif font-semibold text-primary mb-6 flex items-center">
+                        <i class="fas fa-gamepad mr-2"></i>
+                        Mood-Lifting Games
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- @MAP: games.map(game => ( -->
+                        <div class="flex items-center space-x-3 p-3 bg-card rounded-lg hover:bg-accent/10 transition-colors cursor-pointer" data-mock="true">
+                            <div class="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                                <i class="fas fa-puzzle-piece text-primary-foreground"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Peaceful Puzzles</h4>
+                                <p class="text-sm text-muted-foreground">Relaxing jigsaw puzzles</p>
+                            </div>
+                            <i class="fas fa-external-link-alt text-muted-foreground"></i>
+                        </div>
+                        <!-- @END_MAP )) -->
+
+                        <div class="flex items-center space-x-3 p-3 bg-card rounded-lg hover:bg-accent/10 transition-colors cursor-pointer" data-mock="true">
+                            <div class="w-12 h-12 bg-gradient-to-br from-secondary to-primary rounded-lg flex items-center justify-center">
+                                <i class="fas fa-seedling text-primary-foreground"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Garden Zen</h4>
+                                <p class="text-sm text-muted-foreground">Virtual gardening</p>
+                            </div>
+                            <i class="fas fa-external-link-alt text-muted-foreground"></i>
+                        </div>
+                    </div>
+                </section>
+                <!-- @END_COMPONENT: GamesSection -->
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- AI Companion -->
+                <!-- @COMPONENT: AICompanion [chatbot with voice capabilities] -->
+                <section class="magical-border rounded-2xl p-6 glow-effect">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-serif font-semibold text-primary flex items-center">
+                            <div class="w-8 h-8 mr-2 genie-gradient rounded-full flex items-center justify-center float">
+                                <i class="fas fa-robot text-primary-foreground text-sm"></i>
+                            </div>
+                            Your Genie Guide
+                        </h3>
+                        <div class="flex space-x-2">
+                            <button class="p-2 bg-card rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="p-2 bg-card rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="space-y-3 mb-4 max-h-64 overflow-y-auto">
+                        <!-- AI Message -->
+                        <div class="flex items-start space-x-2" data-mock="true">
+                            <div class="w-6 h-6 genie-gradient rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-magic text-xs text-primary-foreground"></i>
+                            </div>
+                            <div class="bg-primary/20 rounded-lg p-3 max-w-[80%]">
+                                <p class="text-sm">Hello Sarah! ✨ I'm here to support you today. How are you feeling right now?</p>
+                            </div>
+                        </div>
+
+                        <!-- User Message -->
+                        <div class="flex items-start space-x-2 justify-end" data-mock="true">
+                            <div class="bg-accent rounded-lg p-3 max-w-[80%]">
+                                <p class="text-sm text-accent-foreground">I'm feeling a bit overwhelmed with work today.</p>
+                            </div>
+                            <div class="w-6 h-6 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-xs"></i>
+                            </div>
+                        </div>
+
+                        <!-- AI Response -->
+                        <div class="flex items-start space-x-2" data-mock="true">
+                            <div class="w-6 h-6 genie-gradient rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-magic text-xs text-primary-foreground"></i>
+                            </div>
+                            <div class="bg-primary/20 rounded-lg p-3 max-w-[80%]">
+                                <p class="text-sm">I understand that feeling. Remember, like a gentle river, we can flow around obstacles rather than fight them. Would you like to try a quick breathing exercise? 🌊</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="flex space-x-2">
+                        <input type="text" placeholder="Share your thoughts..." class="flex-1 px-3 py-2 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring" data-mock="true" />
+                        <button class="p-2 genie-gradient rounded-lg hover:opacity-90 transition-opacity">
+                            <i class="fas fa-paper-plane text-primary-foreground"></i>
+                        </button>
+                    </div>
+                </section>
+                <!-- @END_COMPONENT: AICompanion -->
+
+                <!-- Quick Actions -->
+                <!-- @COMPONENT: QuickActions [shortcuts to different app sections] -->
+                <section class="magical-border rounded-2xl p-6">
+                    <h3 class="text-lg font-serif font-semibold text-primary mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full flex items-center space-x-3 p-3 bg-card hover:bg-accent hover:text-accent-foreground rounded-lg transition-colors">
+                            <i class="fas fa-users text-primary"></i>
+                            <span>Community Feed</span>
+                        </button>
+                        <button class="w-full flex items-center space-x-3 p-3 bg-card hover:bg-accent hover:text-accent-foreground rounded-lg transition-colors">
+                            <i class="fas fa-book-open text-secondary"></i>
+                            <span>Self-Help Library</span>
+                        </button>
+                        <button class="w-full flex items-center space-x-3 p-3 bg-card hover:bg-accent hover:text-accent-foreground rounded-lg transition-colors">
+                            <i class="fas fa-shopping-bag text-accent"></i>
+                            <span>Comfort Shopping</span>
+                        </button>
+                        <button class="w-full flex items-center space-x-3 p-3 bg-card hover:bg-accent hover:text-accent-foreground rounded-lg transition-colors">
+                            <i class="fas fa-user-circle text-primary"></i>
+                            <span>Profile Settings</span>
+                        </button>
+                    </div>
+                </section>
+                <!-- @END_COMPONENT: QuickActions -->
+
+                <!-- Daily Mood Tracker -->
+                <!-- @COMPONENT: MoodTracker [daily mood logging with visualization] -->
+                <section class="magical-border rounded-2xl p-6">
+                    <h3 class="text-lg font-serif font-semibold text-primary mb-4">Daily Mood</h3>
+                    <div class="text-center mb-4">
+                        <p class="text-sm text-muted-foreground mb-3">How are you feeling today?</p>
+                        <div class="flex justify-center space-x-2">
+                            <button class="text-2xl hover:scale-125 transition-transform" title="Very Happy">😄</button>
+                            <button class="text-2xl hover:scale-125 transition-transform" title="Happy">😊</button>
+                            <button class="text-2xl hover:scale-125 transition-transform bg-primary/20 rounded-full p-1" title="Neutral">😐</button>
+                            <button class="text-2xl hover:scale-125 transition-transform" title="Sad">😔</button>
+                            <button class="text-2xl hover:scale-125 transition-transform" title="Very Sad">😢</button>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs text-muted-foreground">
+                            <span>This Week</span>
+                            <span>Avg: Good</span>
+                        </div>
+                        <div class="flex space-x-1 h-2">
+                            <div class="flex-1 bg-secondary rounded-sm"></div>
+                            <div class="flex-1 bg-primary rounded-sm"></div>
+                            <div class="flex-1 bg-accent rounded-sm"></div>
+                            <div class="flex-1 bg-primary rounded-sm"></div>
+                            <div class="flex-1 bg-secondary rounded-sm"></div>
+                            <div class="flex-1 bg-muted rounded-sm"></div>
+                            <div class="flex-1 bg-primary rounded-sm"></div>
+                        </div>
+                    </div>
+                </section>
+                <!-- @END_COMPONENT: MoodTracker -->
+            </div>
+        </div>
+
+        <!-- Community Feed Preview -->
+        <!-- @COMPONENT: CommunityPreview [social feed preview with recent posts] -->
+        <section class="mt-12 magical-border rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-serif font-semibold text-primary flex items-center">
+                    <i class="fas fa-heart mr-2"></i>
+                    Community Support
+                </h3>
+                <button class="text-primary hover:text-primary/80 transition-colors">View All</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- @MAP: communityPosts.map(post => ( -->
+                <div class="bg-card rounded-lg p-4 hover:bg-accent/5 transition-colors" data-mock="true">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <div class="w-8 h-8 genie-gradient rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-primary-foreground text-xs"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm">Alex M.</h4>
+                            <p class="text-xs text-muted-foreground">2 hours ago</p>
+                        </div>
+                    </div>
+                    <p class="text-sm mb-3">Just completed my first week of daily meditation! Feeling more centered and peaceful. 🧘‍♀️✨</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-4">
+                            <button class="flex items-center space-x-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+                                <i class="fas fa-heart"></i>
+                                <span>12</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+                                <i class="fas fa-comment"></i>
+                                <span>3</span>
+                            </button>
+                        </div>
+                        <button class="text-xs text-primary hover:text-primary/80 transition-colors">
+                            Send Support
+                        </button>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+
+                <div class="bg-card rounded-lg p-4 hover:bg-accent/5 transition-colors" data-mock="true">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <div class="w-8 h-8 genie-gradient rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-primary-foreground text-xs"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm">Maya S.</h4>
+                            <p class="text-xs text-muted-foreground">5 hours ago</p>
+                        </div>
+                    </div>
+                    <p class="text-sm mb-3">Grateful for this community. Your support helped me through a difficult day yesterday. 💜</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-4">
+                            <button class="flex items-center space-x-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+                                <i class="fas fa-heart"></i>
+                                <span>24</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+                                <i class="fas fa-comment"></i>
+                                <span>8</span>
+                            </button>
+                        </div>
+                        <button class="text-xs text-primary hover:text-primary/80 transition-colors">
+                            Send Support
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-lg p-4 hover:bg-accent/5 transition-colors" data-mock="true">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <div class="w-8 h-8 genie-gradient rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-primary-foreground text-xs"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm">Jordan L.</h4>
+                            <p class="text-xs text-muted-foreground">1 day ago</p>
+                        </div>
+                    </div>
+                    <p class="text-sm mb-3">Started reading "The Power of Now" from the app's library. Amazing insights on mindfulness! 📚</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-4">
+                            <button class="flex items-center space-x-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+                                <i class="fas fa-heart"></i>
+                                <span>18</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+                                <i class="fas fa-comment"></i>
+                                <span>5</span>
+                            </button>
+                        </div>
+                        <button class="text-xs text-primary hover:text-primary/80 transition-colors">
+                            Send Support
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: CommunityPreview -->
+    </main>
+
+    <!-- Floating Action Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button class="w-14 h-14 genie-gradient rounded-full shadow-2xl hover:scale-110 transition-transform glow-effect flex items-center justify-center">
+            <i class="fas fa-plus text-primary-foreground text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border md:hidden">
+        <div class="flex items-center justify-around py-2">
+            <button class="flex flex-col items-center py-2 px-4">
+                <i class="fas fa-home text-primary mb-1"></i>
+                <span class="text-xs">Home</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4">
+                <i class="fas fa-feather-alt text-muted-foreground mb-1"></i>
+                <span class="text-xs text-muted-foreground">Journal</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4">
+                <i class="fas fa-users text-muted-foreground mb-1"></i>
+                <span class="text-xs text-muted-foreground">Community</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4">
+                <i class="fas fa-robot text-muted-foreground mb-1"></i>
+                <span class="text-xs text-muted-foreground">Genie</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4">
+                <i class="fas fa-user text-muted-foreground mb-1"></i>
+                <span class="text-xs text-muted-foreground">Profile</span>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+    // TODO: Implement business logic, API calls, and state management
+    
+    (function() {
+        // Simple breathing animation controller
+        const breathingCircle = document.querySelector('.breathing-circle');
+        let isBreathingActive = false;
+
+        // Breathing exercise control
+        const breathingButton = document.querySelector('button:has(.fa-play)');
+        if (breathingButton) {
+            breathingButton.addEventListener('click', function() {
+                isBreathingActive = !isBreathingActive;
+                const icon = this.querySelector('i');
+                
+                if (isBreathingActive) {
+                    icon.className = 'fas fa-pause mr-2';
+                    this.innerHTML = '<i class="fas fa-pause mr-2"></i>Pause Session';
+                } else {
+                    icon.className = 'fas fa-play mr-2';
+                    this.innerHTML = '<i class="fas fa-play mr-2"></i>Start Session';
+                }
+            });
+        }
+
+        // Tab switching for media section
+        const tabButtons = document.querySelectorAll('.flex.space-x-1 button');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                tabButtons.forEach(btn => {
+                    btn.className = 'flex-1 py-2 px-4 rounded-md hover:bg-background transition-colors';
+                });
+                
+                // Add active class to clicked button
+                this.className = 'flex-1 py-2 px-4 rounded-md bg-primary text-primary-foreground transition-colors';
+            });
+        });
+
+        // Mood tracker selection
+        const moodButtons = document.querySelectorAll('section:has(h3:contains("Daily Mood")) button[title]');
+        moodButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active state from all mood buttons
+                moodButtons.forEach(btn => {
+                    btn.className = 'text-2xl hover:scale-125 transition-transform';
+                });
+                
+                // Add active state to selected mood
+                this.className = 'text-2xl hover:scale-125 transition-transform bg-primary/20 rounded-full p-1';
+            });
+        });
+
+        // Chat input handling
+        const chatInput = document.querySelector('input[placeholder="Share your thoughts..."]');
+        const chatSendButton = document.querySelector('button:has(.fa-paper-plane)');
+        
+        if (chatInput && chatSendButton) {
+            chatSendButton.addEventListener('click', function() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    // TODO: Send message to AI companion API
+                    chatInput.value = '';
+                }
+            });
+
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    chatSendButton.click();
+                }
+            });
+        }
+
+        // Add magical particle effects on hover for certain elements
+        const magicalElements = document.querySelectorAll('.glow-effect, .genie-gradient');
+        magicalElements.forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.filter = 'brightness(1.1) saturate(1.2)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.filter = 'brightness(1) saturate(1)';
+            });
+        });
+
+        // Language selector change
+        const languageSelect = document.querySelector('select');
+        if (languageSelect) {
+            languageSelect.addEventListener('change', function() {
+                // TODO: Implement language switching logic
+                console.log('Language changed to:', this.value);
+            });
+        }
+
+        // Theme selector
+        const themeButton = document.querySelector('button:has(.fa-palette)');
+        if (themeButton) {
+            themeButton.addEventListener('click', function() {
+                // TODO: Implement theme switching logic
+                console.log('Theme selector clicked');
+            });
+        }
+    })();
+    </script>
+</body>
+</html>

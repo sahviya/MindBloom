@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/ws": "^8.18.1",
+    "@vitejs/plugin-react": "^5.0.2",
+    "vite": "^7.1.4"
+  }
+}
