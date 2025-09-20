@@ -183,7 +183,6 @@ Pull requests are welcome! For major changes, open an issue first.
 
 MIT License 2025 Mind Bloom
 
-
 ---
 
 ## 🚀 Deployment
