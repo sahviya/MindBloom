@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(240, 27%, 9%);
+  --foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 19%, 16%);
+  --card-foreground: hsl(0, 0%, 95%);
+  --popover: hsl(240, 19%, 16%);
+  --popover-foreground: hsl(0, 0%, 95%);
+  --primary: hsl(263, 70%, 60%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(45, 100%, 60%);
+  --secondary-foreground: hsl(240, 19%, 16%);
+  --muted: hsl(240, 19%, 16%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --accent: hsl(217, 91%, 60%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62%, 30%);
+  --destructive-foreground: hsl(0, 85%, 97%);
+  --border: hsl(240, 19%, 27%);
+  --input: hsl(240, 19%, 16%);
+  --ring: hsl(263, 70%, 60%);
+  --chart-1: hsl(203, 88%, 53%);
+  --chart-2: hsl(159, 100%, 36%);
+  --chart-3: hsl(42, 92%, 56%);
+  --chart-4: hsl(147, 78%, 41%);
+  --chart-5: hsl(341, 75%, 50%);
+  --sidebar: hsl(240, 19%, 16%);
+  --sidebar-foreground: hsl(0, 0%, 95%);
+  --sidebar-primary: hsl(263, 70%, 60%);
+  --sidebar-primary-foreground: hsl(0, 0%, 98%);
+  --sidebar-accent: hsl(217, 91%, 60%);
+  --sidebar-accent-foreground: hsl(0, 0%, 98%);
+  --sidebar-border: hsl(240, 19%, 27%);
+  --sidebar-ring: hsl(263, 70%, 60%);
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --radius: 12px;
+}
+
+.light {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(240, 27%, 9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(240, 27%, 9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 27%, 9%);
+  --primary: hsl(263, 70%, 50%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(45, 100%, 50%);
+  --secondary-foreground: hsl(240, 27%, 9%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215, 16%, 47%);
+  --accent: hsl(217, 91%, 50%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --ring: hsl(263, 70%, 50%);
+  --sidebar: hsl(0, 0%, 100%);
+  --sidebar-foreground: hsl(240, 27%, 9%);
+  --sidebar-primary: hsl(263, 70%, 50%);
+  --sidebar-primary-foreground: hsl(0, 0%, 98%);
+  --sidebar-accent: hsl(217, 91%, 50%);
+  --sidebar-accent-foreground: hsl(0, 0%, 98%);
+  --sidebar-border: hsl(214, 32%, 91%);
+  --sidebar-ring: hsl(263, 70%, 50%);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background);
+    color: var(--foreground);
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .genie-gradient {
+    background: linear-gradient(135deg, hsl(263, 70%, 60%) 0%, hsl(217, 91%, 60%) 50%, hsl(45, 100%, 60%) 100%);
+  }
+
+  .magical-border {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--background), var(--background)) padding-box,
+               linear-gradient(135deg, hsl(263, 70%, 60%), hsl(217, 91%, 60%), hsl(45, 100%, 60%)) border-box;
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 20px hsla(263, 70%, 60%, 0.3),
+               0 0 40px hsla(217, 91%, 60%, 0.2),
+               0 0 60px hsla(45, 100%, 60%, 0.1);
+  }
+
+  .breathing-circle {
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .magical-shimmer {
+    background: linear-gradient(45deg, transparent 30%, hsla(45, 100%, 60%, 0.1) 50%, transparent 70%);
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
