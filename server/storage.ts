@@ -1,36 +1,51 @@
-import { PrismaClient, type User as PrismaUser, type JournalEntry as PrismaJournalEntry, type CommunityPost as PrismaCommunityPost, type PostComment as PrismaPostComment, type MoodEntry as PrismaMoodEntry, type AiConversation as PrismaAiConversation } from "@prisma/client";
-import { type InsertJournalEntry, type InsertCommunityPost, type InsertPostComment, type InsertMoodEntry, type InsertAiConversation, type User as SharedUser, type JournalEntry as SharedJournalEntry, type CommunityPost as SharedCommunityPost, type PostComment as SharedPostComment, type MoodEntry as SharedMoodEntry, type AiConversation as SharedAiConversation, type UpsertUser } from "@shared/schema";
+import { PrismaClient, type User as PrismaUser, type JournalEntry as PrismaJournalEntry, type CommunityPost as PrismaCommunityPost, type PostComment as PrismaPostComment, type MoodEntry as PrismaMoodEntry, type AiConversation as PrismaAiConversation, type BookReading as PrismaBookReading, type BookBookmark as PrismaBookBookmark, type BookHighlight as PrismaBookHighlight } from "@prisma/client";
+import { type InsertJournalEntry, type InsertCommunityPost, type InsertPostComment, type InsertMoodEntry, type InsertAiConversation, type User as SharedUser, type JournalEntry as SharedJournalEntry, type CommunityPost as SharedCommunityPost, type PostComment as SharedPostComment, type MoodEntry as SharedMoodEntry, type AiConversation as SharedAiConversation, type UpsertUser, type InsertBookReading, type BookReading as SharedBookReading, type InsertBookBookmark, type BookBookmark as SharedBookBookmark, type InsertBookHighlight, type BookHighlight as SharedBookHighlight } from "@shared/schema";
 
 const prisma = new PrismaClient();
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
-  getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
+  getUser(id: string): Promise<SharedUser | undefined>;
+  upsertUser(user: UpsertUser): Promise<SharedUser>;
   
   // Journal operations
-  createJournalEntry(entry: InsertJournalEntry): Promise<JournalEntry>;
-  getJournalEntries(userId: string): Promise<JournalEntry[]>;
-  updateJournalEntry(id: string, userId: string, updates: Partial<InsertJournalEntry>): Promise<JournalEntry | undefined>;
+  createJournalEntry(entry: InsertJournalEntry): Promise<SharedJournalEntry>;
+  getJournalEntries(userId: string): Promise<SharedJournalEntry[]>;
+  updateJournalEntry(id: string, userId: string, updates: Partial<InsertJournalEntry>): Promise<SharedJournalEntry | undefined>;
   deleteJournalEntry(id: string, userId: string): Promise<boolean>;
   
   // Community operations
-  createCommunityPost(post: InsertCommunityPost): Promise<CommunityPost>;
-  getCommunityPosts(limit?: number, offset?: number): Promise<Array<CommunityPost & { user: User; likesCount: number; commentsCount: number; userLiked: boolean }>>;
+  createCommunityPost(post: InsertCommunityPost): Promise<SharedCommunityPost>;
+  getCommunityPosts(limit?: number, offset?: number): Promise<Array<SharedCommunityPost & { user: SharedUser; likesCount: number; commentsCount: number; userLiked: boolean }>>;
   likeCommunityPost(userId: string, postId: string): Promise<boolean>;
   unlikeCommunityPost(userId: string, postId: string): Promise<boolean>;
   
   // Comments operations
-  createPostComment(comment: InsertPostComment): Promise<PostComment>;
-  getPostComments(postId: string): Promise<Array<PostComment & { user: User }>>;
+  createPostComment(comment: InsertPostComment): Promise<SharedPostComment>;
+  getPostComments(postId: string): Promise<Array<SharedPostComment & { user: SharedUser }>>;
   
   // Mood operations
-  createMoodEntry(mood: InsertMoodEntry): Promise<MoodEntry>;
-  getMoodEntries(userId: string, days?: number): Promise<MoodEntry[]>;
+  createMoodEntry(mood: InsertMoodEntry): Promise<SharedMoodEntry>;
+  getMoodEntries(userId: string, days?: number): Promise<SharedMoodEntry[]>;
   
   // AI conversation operations
-  createAiConversation(conversation: InsertAiConversation): Promise<AiConversation>;
-  getAiConversations(userId: string, limit?: number): Promise<AiConversation[]>;
+  createAiConversation(conversation: InsertAiConversation): Promise<SharedAiConversation>;
+  getAiConversations(userId: string, limit?: number): Promise<SharedAiConversation[]>;
+
+  // Books: reading progress
+  getBookReading(userId: string, bookId: string): Promise<SharedBookReading | null>;
+  createBookReading(reading: InsertBookReading): Promise<SharedBookReading>;
+  updateBookReading(userId: string, bookId: string, updates: Partial<InsertBookReading>): Promise<SharedBookReading>;
+
+  // Books: bookmarks
+  getBookBookmarks(userId: string, bookId: string): Promise<SharedBookBookmark[]>;
+  createBookBookmark(bookmark: InsertBookBookmark): Promise<SharedBookBookmark>;
+  deleteBookBookmark(userId: string, id: string): Promise<boolean>;
+
+  // Books: highlights
+  getBookHighlights(userId: string, bookId: string): Promise<SharedBookHighlight[]>;
+  createBookHighlight(highlight: InsertBookHighlight): Promise<SharedBookHighlight>;
+  deleteBookHighlight(userId: string, id: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -155,6 +170,60 @@ export class DatabaseStorage implements IStorage {
 
   async getAiConversations(userId: string, limit = 50): Promise<SharedAiConversation[]> {
     return await prisma.aiConversation.findMany({ where: { userId }, orderBy: { createdAt: 'desc' }, take: limit }) as unknown as SharedAiConversation[];
+  }
+
+  // Books: reading progress
+  async getBookReading(userId: string, bookId: string): Promise<SharedBookReading | null> {
+    const r = await prisma.bookReading.findFirst({ where: { userId, bookId } });
+    return (r as unknown as SharedBookReading) ?? null;
+  }
+
+  async createBookReading(reading: InsertBookReading): Promise<SharedBookReading> {
+    const r = await prisma.bookReading.create({ data: reading as any });
+    return r as unknown as SharedBookReading;
+  }
+
+  async updateBookReading(userId: string, bookId: string, updates: Partial<InsertBookReading>): Promise<SharedBookReading> {
+    // ensure unique by composite (userId, bookId)
+    const existing = await prisma.bookReading.findFirst({ where: { userId, bookId } });
+    if (!existing) {
+      const created = await prisma.bookReading.create({ data: { ...(updates as any), userId, bookId } });
+      return created as unknown as SharedBookReading;
+    }
+    const updated = await prisma.bookReading.update({ where: { id: existing.id }, data: { ...(updates as any) } });
+    return updated as unknown as SharedBookReading;
+  }
+
+  // Books: bookmarks
+  async getBookBookmarks(userId: string, bookId: string): Promise<SharedBookBookmark[]> {
+    const items = await prisma.bookBookmark.findMany({ where: { userId, bookId }, orderBy: { createdAt: 'desc' } });
+    return items as unknown as SharedBookBookmark[];
+  }
+
+  async createBookBookmark(bookmark: InsertBookBookmark): Promise<SharedBookBookmark> {
+    const b = await prisma.bookBookmark.create({ data: bookmark as any });
+    return b as unknown as SharedBookBookmark;
+  }
+
+  async deleteBookBookmark(userId: string, id: string): Promise<boolean> {
+    const result = await prisma.bookBookmark.deleteMany({ where: { id, userId } });
+    return result.count > 0;
+  }
+
+  // Books: highlights
+  async getBookHighlights(userId: string, bookId: string): Promise<SharedBookHighlight[]> {
+    const items = await prisma.bookHighlight.findMany({ where: { userId, bookId }, orderBy: { createdAt: 'desc' } });
+    return items as unknown as SharedBookHighlight[];
+  }
+
+  async createBookHighlight(highlight: InsertBookHighlight): Promise<SharedBookHighlight> {
+    const h = await prisma.bookHighlight.create({ data: highlight as any });
+    return h as unknown as SharedBookHighlight;
+  }
+
+  async deleteBookHighlight(userId: string, id: string): Promise<boolean> {
+    const result = await prisma.bookHighlight.deleteMany({ where: { id, userId } });
+    return result.count > 0;
   }
 }
 

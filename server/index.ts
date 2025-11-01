@@ -1,16 +1,21 @@
 import dotenv from "dotenv";
-import 'dotenv/config';
+import "dotenv/config";
+import { fileURLToPath } from "url";
 import path from "path";
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 console.log("Loaded DATABASE_URL =", process.env.DATABASE_URL);
+
+// Instead of __dirname/__filename, use ESM-safe new URL
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -53,21 +58,13 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  // Bind to all interfaces (important for Render)
+  const port = parseInt(process.env.PORT || "5000", 10);
   const tryListen = (p: number, attemptsLeft: number) => {
     const onError = (err: any) => {
       if (app.get("env") === "development" && err?.code === "EADDRINUSE" && attemptsLeft > 0) {
@@ -80,7 +77,7 @@ app.use((req, res, next) => {
     };
 
     server.once("error", onError);
-    server.listen(p, "0.0.0.0", () => {   // 🔥 changed from 127.0.0.1 to 0.0.0.0
+    server.listen(p, "0.0.0.0", () => {
       server.off("error", onError);
       log(`serving on port ${p}`);
     });

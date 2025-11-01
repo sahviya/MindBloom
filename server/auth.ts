@@ -11,8 +11,12 @@ const googleClient = GOOGLE_CLIENT_ID ? new OAuth2Client(GOOGLE_CLIENT_ID) : und
 
 export async function register(req: Request, res: Response) {
   try {
-    const { email, password, name } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+    const { email: rawEmail, password, name } = req.body as { email?: string; password?: string; name?: string };
+    if (!rawEmail || !password) return res.status(400).json({ error: "Missing email or password" });
+    if (typeof password !== 'string' || password.length < 6) {
+      return res.status(400).json({ error: "Password must be at least 6 characters" });
+    }
+    const email = String(rawEmail).trim().toLowerCase();
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) return res.status(409).json({ error: "User already exists" });
     const hash = await bcrypt.hash(password, 10);
@@ -24,12 +28,69 @@ export async function register(req: Request, res: Response) {
   }
 }
 
+/**
+ * Register or set password for an existing Google-created account.
+ * - If user not found: create it (normal register).
+ * - If user found with empty password: set provided password and log in.
+ * - If user found with password: 409 conflict.
+ */
+export async function registerOrSet(req: Request, res: Response) {
+  try {
+    const { email: rawEmail, password, name } = req.body as { email?: string; password?: string; name?: string };
+    if (!rawEmail || !password) return res.status(400).json({ error: "Missing email or password" });
+    if (typeof password !== 'string' || password.length < 6) {
+      return res.status(400).json({ error: "Password must be at least 6 characters" });
+    }
+    const email = String(rawEmail).trim().toLowerCase();
+    const existing = await prisma.user.findUnique({ where: { email } });
+    const hash = await bcrypt.hash(password, 10);
+    if (!existing) {
+      const user = await prisma.user.create({ data: { email, password: hash, name } });
+      const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
+      return res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
+    }
+    if (!existing.password || existing.password.length === 0) {
+      const user = await prisma.user.update({ where: { id: existing.id }, data: { password: hash } });
+      const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
+      return res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
+    }
+    return res.status(409).json({ error: 'User already exists' });
+  } catch (err) {
+    return res.status(500).json({ error: 'Server error' });
+  }
+}
+
+/**
+ * Allow an authenticated user to set or change their password so that
+ * manual email/password sign-in works even if the account was created via Google.
+ */
+export async function setPassword(req: Request, res: Response) {
+  try {
+    const userId = (req as any).userId as string | undefined;
+    const { password } = (req.body || {}) as { password?: string };
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!password || password.length < 6) {
+      return res.status(400).json({ error: "Password must be at least 6 characters" });
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+    const user = await prisma.user.update({ where: { id: userId }, data: { password: hash } });
+    return res.json({ success: true, user: { id: user.id, email: user.email, name: user.name } });
+  } catch (err) {
+    return res.status(500).json({ error: "Failed to update password" });
+  }
+}
+
 export async function login(req: Request, res: Response) {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+    const { email: rawEmail, password } = req.body;
+    if (!rawEmail || !password) return res.status(400).json({ error: "Missing email or password" });
+    const email = String(rawEmail).trim().toLowerCase();
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    if (!user.password || user.password.length === 0) {
+      return res.status(401).json({ error: "Password not set" });
+    }
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(401).json({ error: "Invalid credentials" });
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });

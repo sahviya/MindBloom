@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,16 +9,35 @@ import InlinePDFViewer from "@/components/books/InlinePDFViewer";
 export default function Books() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBook, setSelectedBook] = useState<any>(null);
+  const [availability, setAvailability] = useState<Record<string, boolean>>({});
+  
+  // Prefetch/probe local PDFs via server endpoint (works with special characters)
+  useEffect(() => {
+    const names = [
+      "gita.pdf",
+      "quran.pdf",
+      "bible.pdf",
+    ];
+    names.forEach(async (name) => {
+      try {
+        const url = `/api/books/file?name=${encodeURIComponent(name)}`;
+        const res = await fetch(url, { method: "HEAD" });
+        setAvailability((prev) => ({ ...prev, [name]: res.ok }));
+      } catch {
+        setAvailability((prev) => ({ ...prev, [name]: false }));
+      }
+    });
+  }, []);
 
-  const { data: books } = useQuery({
+  const { data: books = [] } = useQuery<any[]>({
     queryKey: ["/api/books"],
   });
 
-  const filteredBooks = books?.filter((book: any) =>
+  const filteredBooks = books.filter((book: any) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
     book.description.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  );
 
   const bookCategories = [
     {
@@ -142,6 +161,131 @@ export default function Books() {
         </Card>
       )}
 
+      {/* Holy Books / Religious Scriptures (placed above All Books) */}
+      <div className="mt-10 fade-in">
+        <div className="flex items-center mb-6">
+          <div className={`w-12 h-12 bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 rounded-lg flex items-center justify-center mr-4`}>
+            <i className={`fas fa-praying-hands text-lg`}></i>
+          </div>
+          <div>
+            <h2 className="text-2xl font-serif font-semibold text-primary flex items-center">
+              <span className="mr-2">📖</span> Holy Books
+            </h2>
+            <p className="text-sm text-muted-foreground">Timeless scriptures offering spiritual wisdom and guidance</p>
+          </div>
+        </div>
+
+        {(() => {
+          const holyBooks = [
+            {
+              id: 'holy-gita',
+              title: 'Bhagavad Gita',
+              author: 'Hindu Scripture',
+              description: 'Sacred dialogue on duty, devotion, and self-realization.',
+              readUrl: 'https://www.holy-bhagavad-gita.org/',
+              pdfUrl: 'https://www.holy-bhagavad-gita.org/images/Bhagavad-Gita-As-It-Is.pdf',
+              badges: [
+                { cls: 'bg-purple-500/20 text-purple-600 dark:text-purple-400', label: 'Featured' },
+                { cls: 'bg-green-500/20 text-green-600 dark:text-green-400', label: 'Free' },
+                { cls: 'bg-blue-500/20 text-blue-600 dark:text-blue-400', label: 'PDF' },
+              ],
+            },
+            {
+              id: 'holy-quran',
+              title: 'The Quran',
+              author: 'Islamic Holy Text',
+              description: 'The final revelation in Islam, a guidance for mankind.',
+              readUrl: 'https://quran.com/',
+              pdfUrl: 'https://www.quranproject.org/downloads/Quran_Project_Translation.pdf',
+              badges: [
+                { cls: 'bg-purple-500/20 text-purple-600 dark:text-purple-400', label: 'Featured' },
+                { cls: 'bg-green-500/20 text-green-600 dark:text-green-400', label: 'Free' },
+                { cls: 'bg-blue-500/20 text-blue-600 dark:text-blue-400', label: 'PDF' },
+              ],
+            },
+            {
+              id: 'holy-bible',
+              title: 'The Bible (KJV)',
+              author: 'Christian Bible',
+              description: 'The King James Version, a classic English translation.',
+              readUrl: 'https://www.biblegateway.com/passage/?search=Genesis+1&version=KJV',
+              pdfUrl: 'https://www.o-bible.com/download/kjv.pdf',
+              badges: [
+                { cls: 'bg-purple-500/20 text-purple-600 dark:text-purple-400', label: 'Featured' },
+                { cls: 'bg-green-500/20 text-green-600 dark:text-green-400', label: 'Free' },
+                { cls: 'bg-blue-500/20 text-blue-600 dark:text-blue-400', label: 'PDF' },
+              ],
+            },
+          ];
+
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {holyBooks.map((book) => (
+                <Card key={book.id} className="hover:magical-border hover:glow-effect transition-all group" data-testid={`holy-${book.id}`}>
+                  <CardContent className="p-4">
+                    {/* Book Cover */}
+                    <div className="aspect-[3/4] bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-lg mb-4 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+                      <div className="text-center p-4">
+                        <i className="fas fa-book text-4xl text-yellow-600 dark:text-yellow-400 mb-2"></i>
+                        <h4 className="font-semibold text-sm text-yellow-800 dark:text-yellow-200 line-clamp-2 mb-1">
+                          {book.title}
+                        </h4>
+                        <p className="text-xs text-yellow-600 dark:text-yellow-300">
+                          {book.author}
+                        </p>
+                      </div>
+                      {/* Decorative elements */}
+                      <div className="absolute top-2 right-2 w-8 h-8 bg-white/20 rounded-full"></div>
+                      <div className="absolute bottom-2 left-2 w-6 h-6 bg-white/20 rounded-full"></div>
+                    </div>
+
+                    {/* Book Info */}
+                    <div className="space-y-3">
+                      <div>
+                        <h3 className="font-medium text-lg mb-1 line-clamp-2">{book.title}</h3>
+                        <p className="text-sm text-secondary mb-2">{book.author}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-2">{book.description}</p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {book.badges.map((b, i) => (
+                          <Badge key={i} className={b.cls}>{b.label}</Badge>
+                        ))}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col space-y-2">
+                        <Button 
+                          size="sm" 
+                          className="genie-gradient hover:opacity-90 w-full"
+                          asChild
+                        >
+                          <a href={(book as any).readUrl} target="_blank" rel="noopener noreferrer">
+                            <i className="fas fa-book-reader mr-2"></i>
+                            Read Now
+                          </a>
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="w-full" 
+                          asChild
+                        >
+                          <a href={(book as any).pdfUrl} download>
+                            <i className="fas fa-download mr-2"></i>
+                            Download PDF
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          );
+        })()}
+      </div>
+
       {/* Book Categories */}
       <div className="space-y-8">
         {bookCategories.map((category) => (
@@ -219,6 +363,128 @@ export default function Books() {
             </div>
           )
         ))}
+      </div>
+
+      {/* Holy Books / Religious Scriptures */}
+      <div className="mt-10 fade-in">
+        <div className="flex items-center mb-6">
+          <div className={`w-12 h-12 bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 rounded-lg flex items-center justify-center mr-4`}>
+            <i className={`fas fa-praying-hands text-lg`}></i>
+          </div>
+          <div>
+            <h2 className="text-2xl font-serif font-semibold text-primary flex items-center">
+              <span className="mr-2">📖</span> Holy Books
+            </h2>
+            <p className="text-sm text-muted-foreground">Timeless scriptures offering spiritual wisdom and guidance</p>
+          </div>
+        </div>
+
+        {(() => {
+          const holyBooks = [
+            {
+              id: 'holy-gita',
+              title: 'Bhagavad Gita',
+              author: 'Hindu Scripture',
+              description: 'Sacred dialogue on duty, devotion, and self-realization.',
+              pdfUrl: 'https://archive.org/download/BhagavadGita_201606/Bhagavad%20Gita.pdf',
+              badges: [
+                { cls: 'bg-purple-500/20 text-purple-600 dark:text-purple-400', label: 'Featured' },
+                { cls: 'bg-green-500/20 text-green-600 dark:text-green-400', label: 'Free' },
+                { cls: 'bg-blue-500/20 text-blue-600 dark:text-blue-400', label: 'PDF' },
+              ],
+            },
+            {
+              id: 'holy-quran',
+              title: 'The Quran',
+              author: 'Islamic Holy Text',
+              description: 'The final revelation in Islam, a guidance for mankind.',
+              pdfUrl: 'https://archive.org/download/QuranEnglishSaheehIntl/Quran_English_Saheeh_International.pdf',
+              badges: [
+                { cls: 'bg-purple-500/20 text-purple-600 dark:text-purple-400', label: 'Featured' },
+                { cls: 'bg-green-500/20 text-green-600 dark:text-green-400', label: 'Free' },
+                { cls: 'bg-blue-500/20 text-blue-600 dark:text-blue-400', label: 'PDF' },
+              ],
+            },
+            {
+              id: 'holy-bible',
+              title: 'The Bible (KJV)',
+              author: 'Christian Bible',
+              description: 'The King James Version, a classic English translation.',
+              pdfUrl: 'https://archive.org/download/holy-bible-kjv_202009/Holy%20Bible%20-%20KJV.pdf',
+              badges: [
+                { cls: 'bg-purple-500/20 text-purple-600 dark:text-purple-400', label: 'Featured' },
+                { cls: 'bg-green-500/20 text-green-600 dark:text-green-400', label: 'Free' },
+                { cls: 'bg-blue-500/20 text-blue-600 dark:text-blue-400', label: 'PDF' },
+              ],
+            },
+          ];
+
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {holyBooks.map((book) => (
+                <Card key={book.id} className="hover:magical-border hover:glow-effect transition-all group" data-testid={`holy-${book.id}`}>
+                  <CardContent className="p-4">
+                    {/* Book Cover */}
+                    <div className="aspect-[3/4] bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-lg mb-4 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+                      <div className="text-center p-4">
+                        <i className="fas fa-book text-4xl text-yellow-600 dark:text-yellow-400 mb-2"></i>
+                        <h4 className="font-semibold text-sm text-yellow-800 dark:text-yellow-200 line-clamp-2 mb-1">
+                          {book.title}
+                        </h4>
+                        <p className="text-xs text-yellow-600 dark:text-yellow-300">
+                          {book.author}
+                        </p>
+                      </div>
+                      {/* Decorative elements */}
+                      <div className="absolute top-2 right-2 w-8 h-8 bg-white/20 rounded-full"></div>
+                      <div className="absolute bottom-2 left-2 w-6 h-6 bg-white/20 rounded-full"></div>
+                    </div>
+
+                    {/* Book Info */}
+                    <div className="space-y-3">
+                      <div>
+                        <h3 className="font-medium text-lg mb-1 line-clamp-2">{book.title}</h3>
+                        <p className="text-sm text-secondary mb-2">{book.author}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-2">{book.description}</p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {book.badges.map((b, i) => (
+                          <Badge key={i} className={b.cls}>{b.label}</Badge>
+                        ))}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col space-y-2">
+                        <Button 
+                          size="sm" 
+                          className="genie-gradient hover:opacity-90 w-full" 
+                          asChild
+                        >
+                          <a href={book.pdfUrl} target="_blank" rel="noopener noreferrer">
+                            <i className="fas fa-book-reader mr-2"></i>
+                            Read Now
+                          </a>
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="w-full" 
+                          asChild
+                        >
+                          <a href={book.pdfUrl} download>
+                            <i className="fas fa-download mr-2"></i>
+                            Download PDF
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          );
+        })()}
       </div>
 
       {/* No Books Found */}

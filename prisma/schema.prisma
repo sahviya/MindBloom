@@ -26,6 +26,9 @@ model User {
   postComments     PostComment[]
   moodEntries      MoodEntry[]
   aiConversations  AiConversation[]
+  bookReadings     BookReading[]
+  bookBookmarks    BookBookmark[]
+  bookHighlights   BookHighlight[]
 }
 
 model JournalEntry {
@@ -36,7 +39,6 @@ model JournalEntry {
   mood      String?
   tags      String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -99,4 +101,43 @@ model AiConversation {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model BookReading {
+  id            String   @id @default(uuid())
+  userId        String
+  bookId        String
+  currentPage   Int      @default(1)
+  totalPages    Int?
+  readingTheme  String   @default("light")
+  fontSize      Int      @default(16)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+}
+
+model BookBookmark {
+  id         String   @id @default(uuid())
+  userId     String
+  bookId     String
+  pageNumber Int
+  title      String?
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BookHighlight {
+  id         String   @id @default(uuid())
+  userId     String
+  bookId     String
+  pageNumber Int
+  text       String
+  color      String   @default("yellow")
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

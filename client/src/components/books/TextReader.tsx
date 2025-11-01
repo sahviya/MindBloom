@@ -566,3 +566,7 @@ export default function TextReader({ book, onClose }: TextReaderProps) {
 
 
 
+
+
+
+

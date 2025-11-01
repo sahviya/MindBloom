@@ -2,7 +2,7 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { authMiddleware, register as registerHandler, login as loginHandler, googleLogin } from "./auth";
+import { authMiddleware, register as registerHandler, registerOrSet, login as loginHandler, googleLogin, setPassword } from "./auth";
 import { chatWithGenie, analyzeMoodFromText, generateMotivationalQuote } from "./gemini";
 import { 
   insertJournalEntrySchema, 
@@ -21,11 +21,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve static files from client/public
   app.use('/books', express.static(join(process.cwd(), 'client', 'public', 'books')));
   app.use('/ted-thumbnails', express.static(join(process.cwd(), 'client', 'public', 'ted-thumbnails')));
+  // Explicit file sender for local books (works even when SPA fallback interferes)
+  app.get('/api/books/file', async (req, res) => {
+    try {
+      const name = String(req.query.name || '')
+      if (!name) return res.status(400).send('Missing name')
+      const booksDir = join(process.cwd(), 'client', 'public', 'books')
+      const full = join(booksDir, name)
+      // Prevent path traversal
+      if (!full.startsWith(booksDir)) return res.status(400).send('Invalid path')
+      res.sendFile(full, (err) => {
+        if (err) {
+          if (!res.headersSent) res.status(404).end('Not found')
+        }
+      })
+    } catch {
+      res.status(500).end('Failed to serve file')
+    }
+  })
   
   // Auth routes (local JWT)
-  app.post('/api/auth/register', registerHandler);
+  app.post('/api/auth/register', registerOrSet);
   app.post('/api/auth/login', loginHandler);
   app.post('/api/auth/google', googleLogin);
+  app.post('/api/auth/password', authMiddleware, setPassword);
+
+  // Proxy remote PDFs so the client can embed them reliably in an iframe
+  app.get('/api/proxy/pdf', async (req, res) => {
+    try {
+      const url = String(req.query.url || '')
+      if (!url) return res.status(400).send('Missing url')
+      const u = new URL(url)
+      if (!/^https?:$/.test(u.protocol)) return res.status(400).send('Invalid protocol')
+      const upstream = await fetch(u.toString())
+      if (!upstream.ok) return res.status(upstream.status).send('Upstream error')
+
+      // Pass through headers that matter for PDFs
+      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/pdf')
+      const disp = upstream.headers.get('content-disposition') || 'inline'
+      res.setHeader('Content-Disposition', disp)
+
+      const buf = Buffer.from(await upstream.arrayBuffer())
+      res.send(buf)
+    } catch (e) {
+      res.status(500).send('Failed to proxy PDF')
+    }
+  })
 
   // Current user
   app.get('/api/auth/user', authMiddleware, async (req: any, res) => {

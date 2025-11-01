@@ -64,6 +64,9 @@ export default function Profile() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedAvatar, setSelectedAvatar] = useState("🌟");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -143,6 +146,29 @@ export default function Profile() {
     updateProfileMutation.mutate(data);
   };
 
+  async function onUpdatePassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 6) {
+      toast({ title: "Password too short", description: "Minimum 6 characters", variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ title: "Passwords do not match", description: "Please confirm the same password", variant: "destructive" });
+      return;
+    }
+    try {
+      setIsUpdatingPassword(true);
+      await apiRequest("POST", "/api/auth/password", { password: newPassword });
+      setNewPassword("");
+      setConfirmPassword("");
+      toast({ title: "Password updated", description: "You can now sign in using email & password." });
+    } catch (err: any) {
+      toast({ title: "Failed to update password", description: err?.message || "", variant: "destructive" });
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 pb-20 md:pb-8">
@@ -179,7 +205,7 @@ export default function Profile() {
             <CardHeader className="text-center">
               <div className="flex justify-center mb-4">
                 <Avatar className="w-24 h-24 border-4 border-primary/20">
-                  <AvatarImage src={user?.profileImageUrl} />
+                  <AvatarImage src={user?.profileImageUrl ?? undefined} />
                   <AvatarFallback className="genie-gradient text-primary-foreground text-2xl">
                     {selectedAvatar}
                   </AvatarFallback>
@@ -410,6 +436,29 @@ export default function Profile() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Set / Change Password */}
+                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
+                    <h4 className="font-medium flex items-center">
+                      <i className="fas fa-key mr-2"></i>
+                      Set / Change Password
+                    </h4>
+                    <p className="text-sm text-muted-foreground">Create a password to enable email & password sign-in.</p>
+                    <form onSubmit={onUpdatePassword} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <Label>New Password</Label>
+                        <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" />
+                      </div>
+                      <div>
+                        <Label>Confirm Password</Label>
+                        <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Re-enter password" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <Button type="submit" disabled={isUpdatingPassword}>
+                          {isUpdatingPassword ? "Updating…" : "Update Password"}
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                       <div>

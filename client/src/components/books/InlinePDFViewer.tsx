@@ -48,6 +48,8 @@ export default function InlinePDFViewer({ title, pdfUrl, onClose }: InlinePDFVie
   const [newHighlightColor, setNewHighlightColor] = useState<HighlightColor>("yellow");
   const [newHighlightNotes, setNewHighlightNotes] = useState("");
   const [focusMode, setFocusMode] = useState(false);
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
@@ -65,6 +67,33 @@ export default function InlinePDFViewer({ title, pdfUrl, onClose }: InlinePDFVie
     const data = { currentPage, bookmarks, highlights };
     localStorage.setItem(storageKey, JSON.stringify(data));
   }, [currentPage, bookmarks, highlights, storageKey]);
+
+  // Fetch the PDF as a blob and use an object URL to avoid router/CORS issues
+  useEffect(() => {
+    let revoked = false;
+    let urlToRevoke: string | null = null;
+    setLoadError(null);
+    setObjectUrl(null);
+    (async () => {
+      try {
+        const res = await fetch(pdfUrl, { credentials: 'include' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob();
+        const u = URL.createObjectURL(blob);
+        if (!revoked) {
+          setObjectUrl(u);
+          urlToRevoke = u;
+        }
+      } catch (e: any) {
+        setLoadError(String(e?.message || 'Failed to load PDF'));
+        setObjectUrl(null);
+      }
+    })();
+    return () => {
+      revoked = true;
+      if (urlToRevoke) URL.revokeObjectURL(urlToRevoke);
+    };
+  }, [pdfUrl]);
 
   const addBookmark = () => {
     if (!newBookmarkTitle.trim()) return;
@@ -126,12 +155,18 @@ export default function InlinePDFViewer({ title, pdfUrl, onClose }: InlinePDFVie
             <div className="flex items-center justify-between">
               <div>
                 <DialogTitle className="text-lg font-serif">{title}</DialogTitle>
-                <p className="text-muted-foreground text-xs">{new URL(pdfUrl, window.location.origin).pathname}</p>
+                <p className="text-muted-foreground text-xs">Source: {(() => { try { return new URL(pdfUrl).hostname; } catch { return "external"; } })()}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Button size="sm" variant="outline" onClick={() => setFocusMode(true)} title="Focus">
                   <i className="fas fa-eye mr-2"></i>
                   Focus
+                </Button>
+                <Button size="sm" variant="outline" asChild>
+                  <a href={pdfUrl} target="_blank" rel="noopener noreferrer" title="Open in new tab">
+                    <i className="fas fa-external-link-alt mr-2"></i>
+                    Open in new tab
+                  </a>
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => setIsFullscreen(f => !f)}>
                   <i className={`fas ${isFullscreen ? "fa-compress" : "fa-expand"} mr-2`}></i>
@@ -269,10 +304,18 @@ export default function InlinePDFViewer({ title, pdfUrl, onClose }: InlinePDFVie
           <div className="flex-1 overflow-hidden">
             <div className={`${focusMode ? "max-w-5xl mx-auto" : ""} w-full h-full`}>
               <iframe
-                src={`${pdfUrl}#page=${currentPage}&toolbar=1`}
+                src={`${(objectUrl || pdfUrl)}#page=${currentPage}&toolbar=1`}
                 className={`w-full ${focusMode ? "h-[calc(100vh-40px)]" : "h-[calc(100vh-180px)] md:h-[calc(100vh-160px)]"} border-0`}
                 title={title}
               />
+              {loadError && (
+                <div className="absolute inset-0 flex items-center justify-center p-4">
+                  <div className="bg-background/80 rounded-lg p-4 shadow-md text-center">
+                    <p className="text-sm text-red-500 mb-2">Failed to load PDF ({loadError}).</p>
+                    <a className="underline" href={pdfUrl} target="_blank" rel="noopener noreferrer">Open in new tab</a>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

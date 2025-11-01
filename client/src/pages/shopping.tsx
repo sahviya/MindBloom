@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Shopping() {
   const [searchQuery, setSearchQuery] = useState("");
+  const { toast } = useToast();
 
   // Mock data - in a real app, this would come from your backend
   const shoppingItems = {
@@ -32,6 +34,12 @@ export default function Shopping() {
 
   const allItems = [...shoppingItems.comfort, ...shoppingItems.clothing, ...shoppingItems.accessories];
   
+  // Build a dynamic Amazon search URL from a product title
+  const amazonUrlFor = (title: string) => {
+    const query = encodeURIComponent(title.trim());
+    return `https://www.amazon.com/s?k=${query}`;
+  };
+
   const filteredItems = (items: any[]) => {
     if (!searchQuery) return items;
     return items.filter(item =>
@@ -157,7 +165,12 @@ export default function Shopping() {
                     asChild
                     data-testid={`buy-${item.id}`}
                   >
-                    <a href={item.link} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={amazonUrlFor(item.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => toast({ title: "Opened in new tab", description: "Amazon opened in a new tab. Return here anytime.", duration: 2500 })}
+                    >
                       <i className="fas fa-shopping-cart mr-2"></i>
                       View on Amazon
                     </a>
@@ -191,7 +204,12 @@ export default function Shopping() {
                     </div>
                   </div>
                   <Button className="w-full genie-gradient hover:opacity-90" asChild>
-                    <a href={item.link} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={amazonUrlFor(item.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => toast({ title: "Opened in new tab", description: "Amazon opened in a new tab. Return here anytime.", duration: 2500 })}
+                    >
                       <i className="fas fa-shopping-cart mr-2"></i>
                       View on Amazon
                     </a>
@@ -225,7 +243,7 @@ export default function Shopping() {
                     </div>
                   </div>
                   <Button className="w-full genie-gradient hover:opacity-90" asChild>
-                    <a href={item.link} target="_blank" rel="noopener noreferrer">
+                    <a href={amazonUrlFor(item.name)} target="_blank" rel="noopener noreferrer">
                       <i className="fas fa-shopping-cart mr-2"></i>
                       View on Amazon
                     </a>
@@ -259,7 +277,7 @@ export default function Shopping() {
                     </div>
                   </div>
                   <Button className="w-full genie-gradient hover:opacity-90" asChild>
-                    <a href={item.link} target="_blank" rel="noopener noreferrer">
+                    <a href={amazonUrlFor(item.name)} target="_blank" rel="noopener noreferrer">
                       <i className="fas fa-shopping-cart mr-2"></i>
                       View on Amazon
                     </a>

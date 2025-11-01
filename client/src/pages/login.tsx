@@ -60,7 +60,8 @@ export default function Login() {
     setLoading(true);
     try {
       const endpoint = isSignup ? "/api/auth/register" : "/api/auth/login";
-      const res = await apiRequest("POST", endpoint, { email, password, name: email.split("@")[0] });
+      const normalizedEmail = email.trim().toLowerCase();
+      const res = await apiRequest("POST", endpoint, { email: normalizedEmail, password, name: normalizedEmail.split("@")[0] });
       const data = await res.json();
       if (data?.token) {
         localStorage.setItem("auth_token", data.token);
@@ -70,7 +71,39 @@ export default function Login() {
         setError(isSignup ? "Signup failed" : "Login failed");
       }
     } catch (err: any) {
-      setError(err?.message || (isSignup ? "Signup failed" : "Login failed"));
+      const msg = String(err?.message || "");
+      if (msg.includes("Password not set")) {
+        setError("Password not set for this account. If you used Google before, click 'Create one' to set a password with the same email.");
+      } else if (isSignup && msg.startsWith("409")) {
+        setError("Account already exists. Please switch to Sign in.");
+      } else if (!isSignup && msg.startsWith("401")) {
+        // Auto-fallback: if the account was created via Google (password empty),
+        // our server's /api/auth/register will set the password via registerOrSet.
+        try {
+          const normalizedEmail = email.trim().toLowerCase();
+          const res = await apiRequest("POST", "/api/auth/register", { email: normalizedEmail, password, name: normalizedEmail.split("@")[0] });
+          const data = await res.json();
+          if (data?.token) {
+            localStorage.setItem("auth_token", data.token);
+            navigate("/");
+            location.reload();
+            return;
+          }
+          setError("Invalid email or password.");
+        } catch (fallbackErr: any) {
+          const fmsg = String(fallbackErr?.message || "");
+          if (fmsg.startsWith("409")) {
+            // User exists with a password; real invalid credentials
+            setError("Invalid email or password.");
+          } else if (fmsg.includes("Password must be at least 6 characters")) {
+            setError("Password must be at least 6 characters.");
+          } else {
+            setError("Login failed. Please try again.");
+          }
+        }
+      } else {
+        setError(msg || (isSignup ? "Signup failed" : "Login failed"));
+      }
     } finally {
       setLoading(false);
     }
